@@ -1,0 +1,5 @@
+"Trade Date","Transaction Type","Investment Name","Symbol","Shares","Principal Amount","Net Amount"
+"2010-01-12","Buy","ABC Corp","ABC",300,-123.45,-234.56
+"2010-02-01","Sell","ABC Corp","ABC",-300,357.91,245.23
+"2010-03-12","Buy","XYZ Inc","XYZ",100,-5432.23,-5678.90
+"2010-05-01","Sell","XYZ Inc","XYZ",-100,6892.12,6783.53
