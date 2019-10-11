@@ -1,4 +1,6 @@
-# Copyright 2012 Google Inc.
+#!/bin/bash
+#
+# Copyright 2019 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ifdef VERBOSE
-	VERB =
-else
-	VERB = @
-endif
+set -eu
 
-TESTS := $(wildcard *_test.py)
-
-test:
-	$(VERB) ./run_all_tests.sh
-
-update_testdata:
-	$(VERB) ./update_testdata.py
+for t in *_test.py ; do
+  echo -n "Testing ${t} ... "
+  test_out="$(mktemp "/tmp/csv2txf.${t}.XXXXXX")"
+  ./${t} > ${test_out} 2>&1
+  if [[ -n "$(tail -n 1 "${test_out}" | grep OK)" ]]; then
+    rm -f "${test_out}"
+    echo "OK."
+  else
+    echo "failed, see log in ${test_out}"
+  fi
+done
