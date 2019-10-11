@@ -1,5 +1,10 @@
 # csv2txf
 
+[![Build Status][travis-img]][travis-url]
+
+[travis-img]: https://travis-ci.org/mbrukman/csv2txf.svg?branch=master
+[travis-url]: https://travis-ci.org/mbrukman/csv2txf
+
 ## Overview
 
 This package implements a simple converter from CSV files produced by brokers
