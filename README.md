@@ -1,10 +1,6 @@
 # csv2txf
 
-### Table of contents
-
-* [License](#license)
-* [Contributing](#contributing)
-* [Caveats](#caveats)
+## Overview
 
 This package implements a simple converter from CSV files produced by brokers
 which include buy/sell transactions to the TXF format for import into tax
@@ -24,14 +20,6 @@ Currently-supported brokers are:
 
 * Interactive Brokers
 * Vanguard
-
-## License
-
-Apache 2.0; see [`LICENSE`](LICENSE) for details.
-
-## Contributing
-
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for details.
 
 ## Caveats
 
@@ -98,3 +86,11 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md) for details.
    Unfortunately, CSV formats are not standardized amongst the brokers and may
    change at any time, so some custom (re-)formatting may be required for your
    broker's output.
+
+## Contributing
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for details.
+
+## License
+
+Apache 2.0; see [`LICENSE`](LICENSE) for details.
