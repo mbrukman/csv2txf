@@ -20,7 +20,12 @@ python:
   - "3.6"
   - "3.7"
 
+dist: bionic
 sudo: false
+
+branches:
+  only:
+    - master
 
 matrix:
   include:
