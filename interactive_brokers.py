@@ -60,10 +60,9 @@ class InteractiveBrokers:
 
     @classmethod
     def isFileForBroker(cls, filename):
-        f = open(filename)
-        first_line = f.readline()
-        f.close()
-        return first_line.find(FIRST_LINE) == 0
+        with open(filename) as f:
+            first_line = f.readline()
+            return first_line.find(FIRST_LINE) == 0
 
     @classmethod
     def parseFileToTxnList(cls, filename, tax_year):
