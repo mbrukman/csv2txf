@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -u
 #
 # Copyright 2019 Google Inc.
 #
@@ -14,16 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -eu
+declare -i success=0
 
 for t in *_test.py ; do
   echo -n "Testing ${t} ... "
   test_out="$(mktemp "/tmp/csv2txf.${t}.XXXXXX")"
-  ./${t} > ${test_out} 2>&1
-  if [[ -n "$(tail -n 1 "${test_out}" | grep OK)" ]]; then
-    rm -f "${test_out}"
-    echo "OK."
+  ./${t} > "${test_out}" 2>&1
+  if [[ $? -eq 0 ]]; then
+    echo "PASSED."
   else
-    echo "failed, see log in ${test_out}"
+		echo "FAILED."
+    cat "${test_out}"
+    success=1
   fi
+  rm -f "${test_out}"
 done
+
+exit ${success}
