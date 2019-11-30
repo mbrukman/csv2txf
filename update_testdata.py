@@ -33,25 +33,21 @@ from brokers import DetectBroker
 BROKER_CSV = {}
 
 
-def ExitWithError(program, error):
-    sys.stderr.write('%s: error: %s\n' % (program, error))
-    sys.exit(1)
-
-
 def main(argv):
     for csv in glob.glob('testdata/*.csv'):
         (path, filename) = os.path.split(csv)
-        if filename not in BROKER_CSV:
-            broker = DetectBroker(csv)
-        else:
+        if filename in BROKER_CSV:
             broker = BROKER_CSV[filename]
+        else:
+            broker = DetectBroker(csv)
         if not broker:
             continue
 
         golden = csv.replace('.csv', '.golden')
         if not os.access(path, os.W_OK) or (not os.access(golden, os.W_OK) and
                                             os.path.exists(golden)):
-            ExitWithError(argv[0], '%s is not writeable' % golden)
+            sys.stderr.write('error: %s is not writeable\n' % golden)
+            sys.exit(1)
 
         with open(golden, 'w') as out:
             data = broker.parseFileToTxnList(csv, None)
