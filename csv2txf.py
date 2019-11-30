@@ -71,11 +71,12 @@ def main(argv):
         options.year = datetime.today().year - 1
 
     txf_lines = RunConverter(options.broker, options.filename, options.year)
+    txf_out = '\n'.join(txf_lines)
 
     if options.out_filename:
-        open(options.out_filename, 'w').write('\n'.join(txf_lines))
+        open(options.out_filename, 'w').write(txf_out)
     else:
-        print('\n'.join(txf_lines))
+        print(txf_out)
 
 
 if __name__ == '__main__':
