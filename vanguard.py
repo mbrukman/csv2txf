@@ -77,10 +77,9 @@ class Vanguard:
 
     @classmethod
     def isFileForBroker(cls, filename):
-        f = open(filename)
-        first_line = f.readline()
-        f.close()
-        return first_line == FIRST_LINE
+        with open(filename) as f:
+            first_line = f.readline()
+            return first_line == FIRST_LINE
 
     @classmethod
     def parseFileToTxnList(cls, filename, tax_year):

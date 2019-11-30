@@ -74,7 +74,8 @@ def main(argv):
     txf_out = '\n'.join(txf_lines)
 
     if options.out_filename:
-        open(options.out_filename, 'w').write(txf_out)
+        with open(options.out_filename, 'w') as out:
+            out.write(txf_out)
     else:
         print(txf_out)
 
