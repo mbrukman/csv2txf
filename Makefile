@@ -12,13 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-ifdef VERBOSE
+VERB = @
+ifeq ($(VERBOSE),1)
 	VERB =
-else
-	VERB = @
 endif
-
-TESTS := $(wildcard *_test.py)
 
 test:
 	$(VERB) ./run_all_tests.sh
