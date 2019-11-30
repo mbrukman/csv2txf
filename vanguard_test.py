@@ -17,6 +17,7 @@
 """Tests for the vanguard module."""
 
 from datetime import datetime
+import glob
 import os
 import unittest
 from vanguard import Vanguard
@@ -24,14 +25,9 @@ from vanguard import Vanguard
 
 class VanguardTest(unittest.TestCase):
     def testDetect(self):
-        for dirname, dirnames, filenames in os.walk('testdata/'):
-            for filename in filenames:
-                if filename == 'vanguard.csv':
-                    self.assertTrue(Vanguard.isFileForBroker(
-                        'testdata/vanguard.csv'))
-                else:
-                    self.assertFalse(Vanguard.isFileForBroker(
-                        'testdata/' + filename))
+        for csv in glob.glob('testdata/*.csv'):
+            self.assertEqual(os.path.basename(csv) == 'vanguard.csv',
+                    Vanguard.isFileForBroker(csv))
 
     def testParse(self):
         data = Vanguard.parseFileToTxnList('testdata/vanguard.csv', 2010)

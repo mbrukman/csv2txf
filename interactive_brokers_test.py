@@ -17,6 +17,7 @@
 """Tests for interactive_brokers module."""
 
 from datetime import datetime
+import glob
 import os
 import unittest
 from interactive_brokers import InteractiveBrokers
@@ -24,14 +25,9 @@ from interactive_brokers import InteractiveBrokers
 
 class InteractiveBrokersTest(unittest.TestCase):
     def testDetect(self):
-        for dirname, dirnames, filenames in os.walk('testdata/'):
-            for filename in filenames:
-                if filename == 'interactive_brokers.csv':
-                    self.assertTrue(InteractiveBrokers.isFileForBroker(
-                        'testdata/interactive_brokers.csv'))
-                else:
-                    self.assertFalse(InteractiveBrokers.isFileForBroker(
-                        'testdata/' + filename))
+        for csv in glob.glob('testdata/*.csv'):
+            self.assertEqual(os.path.basename(csv) == 'interactive_brokers.csv',
+                    InteractiveBrokers.isFileForBroker(csv))
 
     def testParse(self):
         data = InteractiveBrokers.parseFileToTxnList(
