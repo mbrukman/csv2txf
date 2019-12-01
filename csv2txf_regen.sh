@@ -1,4 +1,6 @@
-# Copyright 2012 Google Inc.
+#!/bin/bash -u
+#
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,14 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-VERB = @
-ifeq ($(VERBOSE),1)
-	VERB =
-endif
-
-test:
-	$(VERB) ./run_all_tests.sh
-
-regen:
-	$(VERB) ./update_testdata.py
-	$(VERB) ./csv2txf_regen.sh
+for csv in testdata/*.csv; do
+  out="${csv%.csv}.out"
+  echo -n "Updating ${out} ... "
+  $(dirname $0)/csv2txf.py -f "${csv}" -o "${out}" --year 2011 --date "04/15/2012"
+  echo "done."
+done
