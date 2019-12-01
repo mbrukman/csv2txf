@@ -30,7 +30,7 @@ class VanguardTest(unittest.TestCase):
                     Vanguard.isFileForBroker(csv))
 
     def testParse(self):
-        data = Vanguard.parseFileToTxnList('testdata/vanguard.csv', 2010)
+        data = Vanguard.parseFileToTxnList('testdata/vanguard.csv', 2011)
         with open('testdata/vanguard.golden') as expected_file:
             for txn in data:
                 expected_txn = expected_file.readline().strip()
