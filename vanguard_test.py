@@ -31,7 +31,7 @@ class VanguardTest(unittest.TestCase):
 
     def testParse(self):
         data = Vanguard.parseFileToTxnList('testdata/vanguard.csv', 2011)
-        with open('testdata/vanguard.golden') as expected_file:
+        with open('testdata/vanguard.parse') as expected_file:
             for txn in data:
                 expected_txn = expected_file.readline().strip()
                 self.assertEqual(expected_txn, str(txn))
