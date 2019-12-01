@@ -16,7 +16,7 @@
 
 declare -i success=0
 
-for t in *_test.py ; do
+for t in *_test.* ; do
   echo -n "Testing ${t} ... "
   test_out="$(mktemp "/tmp/csv2txf.${t}.XXXXXX")"
   ./${t} > "${test_out}" 2>&1

@@ -29,11 +29,13 @@ from utils import txfDate
 from brokers import GetBroker
 
 
-def ConvertTxnListToTxf(txn_list, tax_year):
+def ConvertTxnListToTxf(txn_list, tax_year, date):
     lines = []
     lines.append('V042')  # Version
     lines.append('Acsv2txf')  # Program name/version
-    lines.append('D%s' % txfDate(datetime.today()))  # Export date
+    if date is None:
+        date = txfDate(datetime.today())
+    lines.append('D%s' % date)  # Export date
     lines.append('^')
     for txn in txn_list:
         lines.append('TD')
@@ -51,10 +53,10 @@ def ConvertTxnListToTxf(txn_list, tax_year):
     return lines
 
 
-def RunConverter(broker_name, filename, tax_year):
+def RunConverter(broker_name, filename, tax_year, date):
     broker = GetBroker(broker_name, filename)
     txn_list = broker.parseFileToTxnList(filename, tax_year)
-    return ConvertTxnListToTxf(txn_list, tax_year)
+    return ConvertTxnListToTxf(txn_list, tax_year, date)
 
 
 def main(argv):
@@ -65,12 +67,14 @@ def main(argv):
     parser.add_option("-o", "--outfile", dest="out_filename",
                       help="output file, leave empty for stdout")
     parser.add_option("--year", dest="year", help="tax year", type="int")
+    parser.add_option("--date", dest="date", help="date to output", type="str")
     (options, args) = parser.parse_args(argv)
 
     if not options.year:
         options.year = datetime.today().year - 1
 
-    txf_lines = RunConverter(options.broker, options.filename, options.year)
+    txf_lines = RunConverter(options.broker, options.filename, options.year,
+            options.date)
     txf_out = '\n'.join(txf_lines)
 
     if options.out_filename:

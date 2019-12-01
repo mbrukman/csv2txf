@@ -43,7 +43,7 @@ def main(argv):
         if not broker:
             continue
 
-        golden = csv.replace('.csv', '.golden')
+        golden = csv.replace('.csv', '.parse')
         if not os.access(path, os.W_OK) or (not os.access(golden, os.W_OK) and
                                             os.path.exists(golden)):
             sys.stderr.write('error: %s is not writeable\n' % golden)
