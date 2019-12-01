@@ -32,7 +32,7 @@ class InteractiveBrokersTest(unittest.TestCase):
     def testParse(self):
         data = InteractiveBrokers.parseFileToTxnList(
             'testdata/interactive_brokers.csv', 2011)
-        with open('testdata/interactive_brokers.golden') as expected_file:
+        with open('testdata/interactive_brokers.parse') as expected_file:
             for txn in data:
                 expected_txn = expected_file.readline().strip()
                 self.assertEqual(expected_txn, str(txn))
