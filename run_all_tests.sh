@@ -18,13 +18,9 @@ declare -i success=0
 
 for test in *_test.* ; do
   test_out="$(mktemp "/tmp/csv2txf.${test}.XXXXXX")"
-  if [[ ${test} =~ _test.py ]]; then
-    if [ -n "${PYTHON:-}" ]; then
-      echo -n "Testing ${test} (with ${PYTHON}) ... "
-    else
-      echo -n "Testing ${test} ... "
-    fi
-    ${PYTHON:-} "./${test}" > "${test_out}" 2>&1
+  if [[ ${test} =~ _test.py ]] && [ -n "${PYTHON:-}" ]; then
+    echo -n "Testing ${test} (with ${PYTHON}) ... "
+    "${PYTHON}" "./${test}" > "${test_out}" 2>&1
   else
     echo -n "Testing ${test} ... "
     "./${test}" > "${test_out}" 2>&1
