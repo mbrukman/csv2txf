@@ -20,6 +20,9 @@ endif
 test:
 	$(VERB) ./run_all_tests.sh
 
+clean:
+	$(VERB) rm -f `find . -name \*\.pyc`
+
 regen:
 	$(VERB) ./update_testdata.py
 	$(VERB) ./csv2txf_regen.sh
