@@ -24,8 +24,6 @@ Does not handle:
 * partial lot sales
 """
 
-__author__ = 'mbrukman@google.com (Misha Brukman)'
-
 import csv
 from datetime import datetime
 from decimal import Decimal
