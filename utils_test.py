@@ -16,8 +16,6 @@
 
 """Tests for utils module."""
 
-__author__ = 'mbrukman@google.com (Misha Brukman)'
-
 from datetime import datetime
 import unittest
 import utils
