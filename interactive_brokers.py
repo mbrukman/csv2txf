@@ -22,6 +22,7 @@ Does not handle:
 
 import csv
 from datetime import datetime
+from decimal import Decimal
 import utils
 
 
@@ -56,7 +57,7 @@ class InteractiveBrokers:
 
     @classmethod
     def ParseDollarValue(cls, value):
-        return float(value.replace(',', '').replace('"', ''))
+        return Decimal(value.replace(',', '').replace('"', ''))
 
     @classmethod
     def isFileForBroker(cls, filename):

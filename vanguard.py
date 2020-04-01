@@ -28,6 +28,7 @@ __author__ = 'mbrukman@google.com (Misha Brukman)'
 
 import csv
 from datetime import datetime
+from decimal import Decimal
 import utils
 
 
@@ -69,7 +70,7 @@ class Vanguard:
 
     @classmethod
     def netAmount(cls, dict):
-        amount = float(dict['Net Amount'])
+        amount = Decimal(dict['Net Amount'])
         if cls.isBuy(dict):
             return amount * -1
         else:
