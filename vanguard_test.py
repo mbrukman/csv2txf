@@ -27,7 +27,7 @@ class VanguardTest(unittest.TestCase):
     def testDetect(self):
         for csv in glob.glob('testdata/*.csv'):
             self.assertEqual(os.path.basename(csv) == 'vanguard.csv',
-                    Vanguard.isFileForBroker(csv))
+                             Vanguard.isFileForBroker(csv))
 
     def testParse(self):
         data = Vanguard.parseFileToTxnList('testdata/vanguard.csv', 2011)
