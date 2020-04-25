@@ -74,7 +74,7 @@ def main(argv):
         options.year = datetime.today().year - 1
 
     txf_lines = RunConverter(options.broker, options.filename, options.year,
-            options.date)
+                             options.date)
     txf_out = '\n'.join(txf_lines)
 
     if options.out_filename:

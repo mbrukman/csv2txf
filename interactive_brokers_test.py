@@ -27,7 +27,7 @@ class InteractiveBrokersTest(unittest.TestCase):
     def testDetect(self):
         for csv in glob.glob('testdata/*.csv'):
             self.assertEqual(os.path.basename(csv) == 'interactive_brokers.csv',
-                    InteractiveBrokers.isFileForBroker(csv))
+                             InteractiveBrokers.isFileForBroker(csv))
 
     def testParse(self):
         data = InteractiveBrokers.parseFileToTxnList(
