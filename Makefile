@@ -26,3 +26,13 @@ clean:
 regen:
 	$(VERB) ./update_testdata.py
 	$(VERB) ./csv2txf_regen.sh
+
+THIRD_PARTY_PYTHON = third_party/python
+
+install-dev:
+	$(VERB) pip install -r requirements-dev.txt -t $(THIRD_PARTY_PYTHON)
+
+# Requires having installed dependencies first via `make install-dev`.
+autopep8:
+	$(VERB) find . -name \*\.py \
+	        | xargs -I {} python $(THIRD_PARTY_PYTHON)/autopep8.py --in-place {}
