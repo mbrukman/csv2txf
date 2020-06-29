@@ -34,8 +34,10 @@ from interactive_brokers import InteractiveBrokers
 from vanguard import Vanguard
 
 
-BROKERS = {'ib': InteractiveBrokers,
-           'vanguard': Vanguard}
+BROKERS = {
+    'ib': InteractiveBrokers,
+    'vanguard': Vanguard
+}
 
 
 def DetectBroker(filename):
