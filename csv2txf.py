@@ -70,6 +70,10 @@ def main(argv):
     parser.add_option("--date", dest="date", help="date to output", type="str")
     (options, args) = parser.parse_args(argv)
 
+    if not options.filename:
+        sys.stderr.write('Filename is required; specify with `--file` flag.\n')
+        sys.exit(1)
+
     if not options.year:
         options.year = datetime.today().year - 1
 
