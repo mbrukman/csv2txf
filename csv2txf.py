@@ -23,6 +23,7 @@ Docs:
 * TXF standard: http://turbotax.intuit.com/txf/
 """
 
+from decimal import Decimal
 from datetime import datetime
 import sys
 from utils import txfDate
@@ -59,6 +60,22 @@ def RunConverter(broker_name, filename, tax_year, date):
     return ConvertTxnListToTxf(txn_list, tax_year, date)
 
 
+def PrintSummary(broker_name, filename, tax_year):
+    broker = GetBroker(broker_name, filename)
+    total_cost = Decimal(0)
+    total_sales = Decimal(0)
+    txn_list = broker.parseFileToTxnList(filename, tax_year)
+    for txn in txn_list:
+        total_cost += txn.costBasis
+        total_sales += txn.saleProceeds
+
+    print('%s summary report for %d' % (broker.name(), tax_year))
+    print('Num sale txns:  %d' % len(txn_list))
+    print('Total cost:     $%.2f' % total_cost)
+    print('Total proceeds: $%.2f' % total_sales)
+    print('Net gain/loss:  $%.2f' % (total_sales - total_cost))
+
+
 def main(argv):
     from optparse import OptionParser
     parser = OptionParser()
@@ -66,6 +83,8 @@ def main(argv):
     parser.add_option("-f", "--file", dest="filename", help="input file")
     parser.add_option("-o", "--outfile", dest="out_filename",
                       help="output file, leave empty for stdout")
+    parser.add_option("--outfmt", dest="out_format",
+                      help="output format: `txf` or `summary`")
     parser.add_option("--year", dest="year", help="tax year", type="int")
     parser.add_option("--date", dest="date", help="date to output", type="str")
     (options, args) = parser.parse_args(argv)
@@ -77,15 +96,18 @@ def main(argv):
     if not options.year:
         options.year = datetime.today().year - 1
 
-    txf_lines = RunConverter(options.broker, options.filename, options.year,
-                             options.date)
-    txf_out = '\n'.join(txf_lines)
-
-    if options.out_filename:
-        with open(options.out_filename, 'w') as out:
-            out.write(txf_out)
+    if options.out_format == 'summary':
+        PrintSummary(options.broker, options.filename, options.year)
     else:
-        print(txf_out)
+        txf_lines = RunConverter(options.broker, options.filename, options.year,
+                                 options.date)
+        txf_out = '\n'.join(txf_lines)
+
+        if options.out_filename:
+            with open(options.out_filename, 'w') as out:
+                out.write(txf_out)
+        else:
+            print(txf_out)
 
 
 if __name__ == '__main__':
