@@ -22,6 +22,7 @@ test:
 
 regen:
 	$(VERB) ./update_testdata.py
+	$(VERB) ./summary_test.sh regen
 	$(VERB) ./csv2txf_regen.sh
 
 THIRD_PARTY_PYTHON = third_party/python

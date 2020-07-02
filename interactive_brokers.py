@@ -31,6 +31,10 @@ FIRST_LINE = 'Title,Worksheet for Form 8949,'
 
 class InteractiveBrokers:
     @classmethod
+    def name(cls):
+        return 'Interactive Brokers'
+
+    @classmethod
     def DetermineEntryCode(cls, part, box):
         if part == 1:
             if box == 'A':

@@ -37,6 +37,10 @@ FIRST_LINE = ','.join(['"Trade Date"', '"Transaction Type"',
 
 class Vanguard:
     @classmethod
+    def name(cls):
+        return 'Vanguard'
+
+    @classmethod
     def isBuy(cls, dict):
         return dict['Transaction Type'] == 'Buy'
 
@@ -55,7 +59,7 @@ class Vanguard:
         return dict['Symbol']
 
     @classmethod
-    def name(cls, dict):
+    def investmentName(cls, dict):
         return dict['Investment Name']
 
     @classmethod
@@ -113,7 +117,7 @@ class Vanguard:
                 # current buy txn we are processing.
                 assert cls.numShares(buy) == cls.numShares(sell)
                 assert cls.symbol(buy) == cls.symbol(sell)
-                assert cls.name(buy) == cls.name(sell)
+                assert cls.investmentName(buy) == cls.investmentName(sell)
 
                 curr_txn.sellDate = cls.date(sell)
                 curr_txn.sellDateStr = utils.txfDate(curr_txn.sellDate)
