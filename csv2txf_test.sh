@@ -14,34 +14,75 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-declare -i success=0
+# To regenerate expected stdout in response to changes in the code, run this
+# test with the arg `regen`.
+declare -i regen=0
+if [ "${1:-}" == "regen" ]; then
+  regen=1
+fi
 
-for csv in testdata/*.csv; do
-  echo -n "Testing ${csv} ... "
-  base_csv="$(basename "${csv}")"
-  actual_out="$(mktemp "/tmp/csv2txf_test.${base_csv}.out.XXXXXX")"
-  actual_err="$(mktemp "/tmp/csv2txf_test.${base_csv}.err.XXXXXX")"
-  output_diff="$(mktemp "/tmp/csv2txf_test.${base_csv}.out_diff.XXXXXX")"
-  expected_out="${csv%.csv}.out"
+declare -i num_failures=0
 
-  $(dirname $0)/csv2txf.py -f "${csv}" -o "${actual_out}" \
-      --year 2011 --date "04/15/2012" \
-      2> "${actual_err}"
+# Args:
+#   $0: file with expected stdout
+#   $*: command-line flags for csv2txf.py for this run
+function test_csv2txf() {
+  local expected_out="$1"
+  shift
 
-  diff -u "${expected_out}" "${actual_out}" > "${output_diff}" 2>&1
-  if [[ $? -eq 0 ]]; then
-    echo "PASSED."
-  else
-    echo "FAILED."
-    cat "${output_diff}"
-    if [[ $(wc -l < "${actual_err}") -gt 0 ]]; then
-      echo "Additional warnings & errors:"
-      cat "${actual_err}"
-    fi
-    success=1
+  if [ $regen -ne 0 ]; then
+    echo "Updating ${expected_out} ..."
+    ./csv2txf.py "$@" -o "${expected_out}"
+    return
   fi
 
-  rm -f "${actual_out}" "${actual_err}" "${output_diff}"
-done
+  echo "Testing ${expected_out} ..."
+  local base="$(basename ${expected_out})"
+  local out="$(mktemp /tmp/csv2txf.${base}.out.XXXXXX)"
+  local err="$(mktemp /tmp/csv2txf.${base}.err.XXXXXX)"
+  ./csv2txf.py "$@" -o "${out}" 2> "${err}"
 
-exit ${success}
+  diff -u "${expected_out}" "${out}" || {
+    cat "${err}"
+    (( num_failures += 1 ))
+  }
+}
+
+test_csv2txf \
+    testdata/interactive_brokers.out \
+    --broker ib \
+    --file testdata/interactive_brokers.csv \
+    --year 2011 \
+    --date "04/15/2012" \
+    --outfmt txf
+
+test_csv2txf \
+    testdata/interactive_brokers.summary.out \
+    --broker ib \
+    --file testdata/interactive_brokers.csv \
+    --year 2011 \
+    --outfmt summary
+
+test_csv2txf \
+    testdata/vanguard.out \
+    --broker vanguard \
+    --file testdata/vanguard.csv \
+    --year 2011 \
+    --date "04/15/2012" \
+    --outfmt txf
+
+test_csv2txf \
+    testdata/vanguard.summary.out \
+    --broker vanguard \
+    --file testdata/vanguard.csv \
+    --year 2011 \
+    --outfmt summary
+
+if [ ${regen} -eq 0 ]; then
+  if [ ${num_failures} -eq 0 ]; then
+    echo "PASSED"
+  else
+    echo "FAILED"
+    exit 1
+  fi
+fi
