@@ -24,6 +24,7 @@ TXF format, thus making it easy to add support for additional brokers.
 Currently-supported brokers are:
 
 * Interactive Brokers
+* TD Ameritrade
 * Vanguard
 
 ## Caveats

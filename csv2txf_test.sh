@@ -64,6 +64,21 @@ test_csv2txf \
     --outfmt summary
 
 test_csv2txf \
+    testdata/tdameritrade.out \
+    --broker tdameritrade \
+    --file testdata/tdameritrade.csv \
+    --year 2020 \
+    --date "04/15/2021" \
+    --outfmt txf
+
+test_csv2txf \
+    testdata/tdameritrade.summary.out \
+    --broker tdameritrade \
+    --file testdata/tdameritrade.csv \
+    --year 2020 \
+    --outfmt summary
+
+test_csv2txf \
     testdata/vanguard.out \
     --broker vanguard \
     --file testdata/vanguard.csv \
