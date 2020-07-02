@@ -31,12 +31,15 @@ To define a new broker:
 """
 
 from interactive_brokers import InteractiveBrokers
+from tdameritrade import TDAmeritrade
 from vanguard import Vanguard
 
 
 BROKERS = {
+    'amtd': TDAmeritrade,
     'ib': InteractiveBrokers,
-    'vanguard': Vanguard
+    'tdameritrade': TDAmeritrade,
+    'vanguard': Vanguard,
 }
 
 
