@@ -60,7 +60,7 @@ def RunConverter(broker_name, filename, tax_year, date):
     return ConvertTxnListToTxf(txn_list, tax_year, date)
 
 
-def PrintSummary(broker_name, filename, tax_year):
+def GetSummary(broker_name, filename, tax_year):
     broker = GetBroker(broker_name, filename)
     total_cost = Decimal(0)
     total_sales = Decimal(0)
@@ -69,12 +69,13 @@ def PrintSummary(broker_name, filename, tax_year):
         total_cost += txn.costBasis
         total_sales += txn.saleProceeds
 
-    print('%s summary report for %d' % (broker.name(), tax_year))
-    print('Num sale txns:  %d' % len(txn_list))
-    print('Total cost:     $%.2f' % total_cost)
-    print('Total proceeds: $%.2f' % total_sales)
-    print('Net gain/loss:  $%.2f' % (total_sales - total_cost))
-
+    return '\n'.join([
+        '%s summary report for %d' % (broker.name(), tax_year),
+        'Num sale txns:  %d' % len(txn_list),
+        'Total cost:     $%.2f' % total_cost,
+        'Total proceeds: $%.2f' % total_sales,
+        'Net gain/loss:  $%.2f' % (total_sales - total_cost),
+    ])
 
 def main(argv):
     from optparse import OptionParser
@@ -96,18 +97,19 @@ def main(argv):
     if not options.year:
         options.year = datetime.today().year - 1
 
+    output = None
     if options.out_format == 'summary':
-        PrintSummary(options.broker, options.filename, options.year)
+        output = GetSummary(options.broker, options.filename, options.year)
     else:
         txf_lines = RunConverter(options.broker, options.filename, options.year,
                                  options.date)
-        txf_out = '\n'.join(txf_lines)
+        output = '\n'.join(txf_lines)
 
-        if options.out_filename:
-            with open(options.out_filename, 'w') as out:
-                out.write(txf_out)
-        else:
-            print(txf_out)
+    if options.out_filename:
+        with open(options.out_filename, 'w') as out:
+            out.write(output)
+    else:
+        print(output)
 
 
 if __name__ == '__main__':
