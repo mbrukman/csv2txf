@@ -1,9 +1,9 @@
 # csv2txf
 
-[![Build Status][travis-img]][travis-url]
+[![Build Status][github-ci-badge]][github-ci-url]
 
-[travis-img]: https://travis-ci.org/mbrukman/csv2txf.svg?branch=master
-[travis-url]: https://travis-ci.org/mbrukman/csv2txf
+[github-ci-badge]: https://github.com/mbrukman/csv2txf/actions/workflows/main.yml/badge.svg
+[github-ci-url]: https://github.com/mbrukman/csv2txf/actions/workflows/main.yml
 
 ## Overview
 
