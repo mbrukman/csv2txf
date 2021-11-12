@@ -33,6 +33,7 @@ To define a new broker:
 from interactive_brokers import InteractiveBrokers
 from tdameritrade import TDAmeritrade
 from vanguard import Vanguard
+from schwab import Schwab
 
 
 BROKERS = {
@@ -40,6 +41,7 @@ BROKERS = {
     'ib': InteractiveBrokers,
     'tdameritrade': TDAmeritrade,
     'vanguard': Vanguard,
+    'schwab' : Schwab
 }
 
 
