@@ -86,7 +86,7 @@ def GetSummary(broker_name: str, filename: str, tax_year: int) -> str:
 def main(argv):
     from optparse import OptionParser
     parser = OptionParser()
-    parser.add_option("--broker", dest="broker", help="broker name")
+    parser.add_option("--broker", dest="broker", help="broker name or alias")
     parser.add_option("-f", "--file", dest="filename", help="input file")
     parser.add_option("-o", "--outfile", dest="out_filename",
                       help="output file, leave empty for stdout")
