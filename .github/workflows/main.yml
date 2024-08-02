@@ -36,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ 'ubuntu-22.04', 'macos-11' ]
+        os: [ 'ubuntu-22.04', 'macos-12' ]
         python: [ '3.7', '3.8', '3.9', '3.10', '3.11' ]
     name: Python ${{ matrix.python }} (${{ matrix.os }})
     steps:
