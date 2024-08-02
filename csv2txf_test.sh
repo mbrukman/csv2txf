@@ -23,6 +23,12 @@ fi
 
 declare -i num_failures=0
 
+# macOS 12+ doesn't provide /usr/bin/python, but provides /usr/bin/python3
+PYTHON=""
+if ! [[ -f "/usr/bin/python" ]] && [[ -f "/usr/bin/python3" ]]; then
+  PYTHON="python3"
+fi
+
 # Args:
 #   $0: file with expected stdout
 #   $*: command-line flags for csv2txf.py for this run
@@ -32,7 +38,7 @@ function test_csv2txf() {
 
   if [ $regen -ne 0 ]; then
     echo "Updating ${expected_out} ..."
-    ./csv2txf.py "$@" -o "${expected_out}"
+    ${PYTHON} ./csv2txf.py "$@" -o "${expected_out}"
     return
   fi
 
@@ -40,7 +46,7 @@ function test_csv2txf() {
   local base="$(basename ${expected_out})"
   local out="$(mktemp /tmp/csv2txf.${base}.out.XXXXXX)"
   local err="$(mktemp /tmp/csv2txf.${base}.err.XXXXXX)"
-  ./csv2txf.py "$@" -o "${out}" 2> "${err}"
+  ${PYTHON} ./csv2txf.py "$@" -o "${out}" 2> "${err}"
 
   diff -u "${expected_out}" "${out}" || {
     cat "${err}"
