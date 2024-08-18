@@ -1,0 +1,8 @@
+# We don't need any content here, but the absence of this file breaks
+# actions/setup-python in GitHub Actions, e.g.,
+#
+#   https://github.com/mbrukman/csv2txf/actions/runs/10437183622/job/28903088310?pr=29
+#
+#   > Error: No file in /Users/runner/work/csv2txf/csv2txf matched to
+#   > [**/requirements.txt or **/pyproject.toml], make sure you have checked out
+#   > the target repository
