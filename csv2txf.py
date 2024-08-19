@@ -23,19 +23,23 @@ Docs:
 * TXF standard: http://turbotax.intuit.com/txf/
 """
 
+from __future__ import annotations
+
 from decimal import Decimal
 from datetime import datetime
 import sys
-from utils import txfDate
+from typing import List
+
 from brokers import GetBroker
+import utils
 
 
-def ConvertTxnListToTxf(txn_list, tax_year, date):
+def ConvertTxnListToTxf(txn_list: list[utils.Transaction], tax_year: int, date: str) -> List[str]:
     lines = []
     lines.append('V042')  # Version
     lines.append('Acsv2txf')  # Program name/version
     if date is None:
-        date = txfDate(datetime.today())
+        date = utils.txfDate(datetime.today())
     lines.append('D%s' % date)  # Export date
     lines.append('^')
     for txn in txn_list:
@@ -54,19 +58,21 @@ def ConvertTxnListToTxf(txn_list, tax_year, date):
     return lines
 
 
-def RunConverter(broker_name, filename, tax_year, date):
+def RunConverter(broker_name: str, filename: str, tax_year: int, date: str) -> List[str]:
     broker = GetBroker(broker_name, filename)
     txn_list = broker.parseFileToTxnList(filename, tax_year)
     return ConvertTxnListToTxf(txn_list, tax_year, date)
 
 
-def GetSummary(broker_name, filename, tax_year):
+def GetSummary(broker_name: str, filename: str, tax_year: int) -> str:
     broker = GetBroker(broker_name, filename)
     total_cost = Decimal(0)
     total_sales = Decimal(0)
     txn_list = broker.parseFileToTxnList(filename, tax_year)
     for txn in txn_list:
+        assert txn.costBasis is not None
         total_cost += txn.costBasis
+        assert txn.saleProceeds is not None
         total_sales += txn.saleProceeds
 
     return '\n'.join([
@@ -94,15 +100,17 @@ def main(argv):
         sys.stderr.write('Filename is required; specify with `--file` flag.\n')
         sys.exit(1)
 
-    if not options.year:
-        options.year = datetime.today().year - 1
+    if options.year:
+        year = int(options.year)
+    else:
+        year = datetime.today().year - 1
+        utils.Warning(f'Year not specified, defaulting to {year} (last year)\n')
 
     output = None
     if options.out_format == 'summary':
-        output = GetSummary(options.broker, options.filename, options.year)
+        output = GetSummary(options.broker, options.filename, year)
     else:
-        txf_lines = RunConverter(options.broker, options.filename, options.year,
-                                 options.date)
+        txf_lines = RunConverter(options.broker, options.filename, year, options.date)
         output = '\n'.join(txf_lines)
 
     if options.out_filename:

@@ -14,7 +14,12 @@
 
 """Utility methods/classes."""
 
+from __future__ import annotations
+
+from datetime import datetime
+from decimal import Decimal
 import sys
+from typing import Optional
 
 
 class Error(Exception):
@@ -25,7 +30,7 @@ class ValueError(Error):
     def __init__(self, msg):
         self.msg = msg
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.msg
 
 
@@ -33,25 +38,27 @@ class UnimplementedError(Error):
     def __init__(self, msg):
         self.msg = msg
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.msg
 
 
-def Warning(str):
-    sys.stderr.write('warning: %s' % str)
+def Warning(msg: str):
+    sys.stderr.write('warning: %s' % msg)
 
 
-class Transaction(object):
-    def __init__(self):
-        self.desc = None
-        self.buyDateStr = None
-        self.costBasis = None
-        self.sellDateStr = None
-        self.saleProceeds = None
-        self.adjustment = None
-        self.entryCode = None
+class Transaction:
 
-    def __str__(self):
+    desc: Optional[str] = None
+    buyDate: Optional[datetime] = None
+    buyDateStr: Optional[str] = None
+    costBasis: Optional[Decimal] = None
+    sellDate: Optional[datetime] = None
+    sellDateStr: Optional[str] = None
+    saleProceeds: Optional[Decimal] = None
+    adjustment: Optional[Decimal] = None
+    entryCode: Optional[int] = None
+
+    def __str__(self) -> str:
         data = [
             ('desc:%s', self.desc),
             ('buyDateStr:%s', self.buyDateStr),
@@ -65,12 +72,12 @@ class Transaction(object):
         return ','.join(formatted_data)
 
 
-def txfDate(date):
+def txfDate(date: datetime) -> str:
     """Returns a date string in the TXF format, which is MM/DD/YYYY."""
     return date.strftime('%m/%d/%Y')
 
 
-def isLongTerm(buy_date, sell_date):
+def isLongTerm(buy_date: datetime, sell_date: datetime) -> bool:
     # To handle leap years, cannot use a standard number of days, i.e.:
     #   sell_date - buy_date > timedelta(days=365)
     #   - doesn't work for leap years

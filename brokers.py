@@ -28,12 +28,17 @@ To define a new broker:
 3) Add your class to the BROKERS map below.
 """
 
+from __future__ import annotations
+
+from typing import Optional, Type
+
+from broker import Broker
 from interactive_brokers import InteractiveBrokers
 from tdameritrade import TDAmeritrade
 from vanguard import Vanguard
 
 
-BROKERS = {
+BROKERS: dict[str, Type[Broker]] = {
     'amtd': TDAmeritrade,
     'ib': InteractiveBrokers,
     'tdameritrade': TDAmeritrade,
@@ -41,7 +46,7 @@ BROKERS = {
 }
 
 
-def DetectBroker(filename):
+def DetectBroker(filename: str) -> Optional[Type[Broker]]:
     for (broker_name, broker) in BROKERS.items():
         if hasattr(broker, 'isFileForBroker'):
             if broker.isFileForBroker(filename):
@@ -50,12 +55,11 @@ def DetectBroker(filename):
     return None
 
 
-def GetBroker(broker_name, filename):
-    if not broker_name or broker_name not in BROKERS:
-        broker = DetectBroker(filename)
-    else:
-        broker = BROKERS[broker_name]
+def GetBroker(broker_name: str, filename: str) -> Type[Broker]:
+    if broker_name in BROKERS:
+        return BROKERS[broker_name]
 
+    broker: Optional[Type[Broker]] = DetectBroker(filename)
     if not broker:
         raise Exception('Invalid broker name: %s' % broker_name)
 

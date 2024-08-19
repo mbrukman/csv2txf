@@ -20,17 +20,21 @@ Re-generates the transactions for each broker and writes them out as ASCII
 strings.
 """
 
+from __future__ import annotations
+
 import glob
 import os
 import sys
+from typing import Type
 
+from broker import Broker
 from brokers import DetectBroker
 
 # If your broker parser does not support isFileForBroker, you'll need
-# need to add an entry here.
-# Example:
-# 'vanguard.csv' : Vanguard
-BROKER_CSV = {}
+# need to add an entry here. Example entry:
+#
+#     'my_broker.csv' : MyBroker
+BROKER_CSV: dict[str, Type[Broker]] = {}
 
 
 def main(argv):

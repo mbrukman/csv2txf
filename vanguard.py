@@ -22,9 +22,15 @@ Does not handle:
 * partial lot sales
 """
 
+from __future__ import annotations
+
 import csv
 from datetime import datetime
 from decimal import Decimal
+from typing import Optional
+
+from broker import Broker
+from decorators import override
 import utils
 
 
@@ -33,64 +39,68 @@ FIRST_LINE = ','.join(['"Trade Date"', '"Transaction Type"',
                        '"Principal Amount"', '"Net Amount"\n'])
 
 
-class Vanguard:
+class Vanguard(Broker):
+
     @classmethod
-    def name(cls):
+    @override
+    def name(cls) -> str:
         return 'Vanguard'
 
     @classmethod
-    def isBuy(cls, dict):
-        return dict['Transaction Type'] == 'Buy'
+    def isBuy(cls, txn: dict[str, str]) -> bool:
+        return txn['Transaction Type'] == 'Buy'
 
     @classmethod
-    def isSell(cls, dict):
-        return dict['Transaction Type'] == 'Sell'
+    def isSell(cls, txn: dict[str, str]) -> bool:
+        return txn['Transaction Type'] == 'Sell'
 
     @classmethod
-    def date(cls, dict):
+    def date(cls, txn: dict[str, str]) -> datetime:
         """Returns date of transaction as datetime object."""
         # Our input date format is YYYY/MM/DD.
-        return datetime.strptime(dict['Trade Date'], '%Y-%m-%d')
+        return datetime.strptime(txn['Trade Date'], '%Y-%m-%d')
 
     @classmethod
-    def symbol(cls, dict):
-        return dict['Symbol']
+    def symbol(cls, txn: dict[str, str]) -> str:
+        return txn['Symbol']
 
     @classmethod
-    def investmentName(cls, dict):
-        return dict['Investment Name']
+    def investmentName(cls, txn: dict[str, str]) -> str:
+        return txn['Investment Name']
 
     @classmethod
-    def numShares(cls, dict):
-        shares = int(dict['Shares'])
-        if cls.isSell(dict):
+    def numShares(cls, txn: dict[str, str]) -> int:
+        shares = int(txn['Shares'])
+        if cls.isSell(txn):
             return shares * -1
         else:
             return shares
 
     @classmethod
-    def netAmount(cls, dict):
-        amount = Decimal(dict['Net Amount'])
-        if cls.isBuy(dict):
+    def netAmount(cls, txn: dict[str, str]) -> Decimal:
+        amount = Decimal(txn['Net Amount'])
+        if cls.isBuy(txn):
             return amount * -1
         else:
             return amount
 
     @classmethod
-    def isFileForBroker(cls, filename):
+    @override
+    def isFileForBroker(cls, filename: str) -> bool:
         with open(filename) as f:
             first_line = f.readline()
             return first_line == FIRST_LINE
 
     @classmethod
-    def parseFileToTxnList(cls, filename, tax_year):
+    @override
+    def parseFileToTxnList(cls, filename: str, tax_year: Optional[int]) -> list[utils.Transaction]:
         txns = csv.reader(open(filename), delimiter=',', quotechar='"')
-        row_num = 0
-        txn_list = []
-        names = None
-        curr_txn = None
-        buy = None
-        sell = None
+        row_num: int = 0
+        txn_list: list[utils.Transaction] = []
+        names: list[str] = []
+        curr_txn: Optional[utils.Transaction] = None
+        buy: dict[str, str] = {}
+        sell: dict[str, str] = {}
         for row in txns:
             row_num = row_num + 1
             if row_num == 1:
@@ -113,21 +123,23 @@ class Vanguard:
                 sell = txn_dict
                 # Assume that sells follow the buys, so we can attach this sale to the
                 # current buy txn we are processing.
+                assert curr_txn is not None
                 assert cls.numShares(buy) == cls.numShares(sell)
                 assert cls.symbol(buy) == cls.symbol(sell)
                 assert cls.investmentName(buy) == cls.investmentName(sell)
 
-                curr_txn.sellDate = cls.date(sell)
-                curr_txn.sellDateStr = utils.txfDate(curr_txn.sellDate)
+                buyDate: datetime = curr_txn.buyDate
+                sellDate: datetime = cls.date(sell)
+                curr_txn.sellDateStr = utils.txfDate(sellDate)
                 curr_txn.saleProceeds = cls.netAmount(sell)
 
-                if utils.isLongTerm(curr_txn.buyDate, curr_txn.sellDate):
+                if utils.isLongTerm(buyDate, sellDate):
                     curr_txn.entryCode = 323  # "LT gain/loss - security"
                 else:
                     curr_txn.entryCode = 321  # "ST gain/loss - security"
 
-                assert curr_txn.sellDate >= curr_txn.buyDate
-                if tax_year and curr_txn.sellDate.year != tax_year:
+                assert sellDate >= buyDate, f'Sell date ({sellDate}) must be on or after buy date ({buyDate})'
+                if tax_year and sellDate.year != tax_year:
                     utils.Warning('ignoring txn: "%s" as the sale is not from %d\n' %
                                   (curr_txn.desc, tax_year))
                     continue
@@ -135,8 +147,8 @@ class Vanguard:
                 txn_list.append(curr_txn)
 
                 # Clear both the buy and the sell as we have matched them up.
-                buy = None
-                sell = None
+                buy = {}
+                sell = {}
                 curr_txn = None
 
         return txn_list

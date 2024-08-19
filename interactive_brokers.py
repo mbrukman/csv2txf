@@ -18,22 +18,30 @@ Does not handle:
 * dividends
 """
 
+from __future__ import annotations
+
 import csv
 from datetime import datetime
 from decimal import Decimal
+from typing import Optional
+
+from broker import Broker
+from decorators import override
 import utils
 
 
 FIRST_LINE = 'Title,Worksheet for Form 8949,'
 
 
-class InteractiveBrokers:
+class InteractiveBrokers(Broker):
+
     @classmethod
-    def name(cls):
+    @override
+    def name(cls) -> str:
         return 'Interactive Brokers'
 
     @classmethod
-    def DetermineEntryCode(cls, part, box):
+    def DetermineEntryCode(cls, part: int, box: str) -> Optional[int]:
         if part == 1:
             if box == 'A':
                 return 321
@@ -51,34 +59,36 @@ class InteractiveBrokers:
         return None
 
     @classmethod
-    def TryParseYear(cls, date_str):
+    def TryParseYear(cls, date_str: str) -> Optional[int]:
         try:
             return datetime.strptime(date_str, '%m/%d/%Y').year
         except ValueError:
             return None
 
     @classmethod
-    def ParseDollarValue(cls, value):
+    def ParseDollarValue(cls, value: str) -> Decimal:
         return Decimal(value.replace(',', '').replace('"', ''))
 
     @classmethod
-    def isFileForBroker(cls, filename):
+    @override
+    def isFileForBroker(cls, filename: str) -> bool:
         with open(filename) as f:
             first_line = f.readline()
             return first_line.find(FIRST_LINE) == 0
 
     @classmethod
-    def parseFileToTxnList(cls, filename, tax_year):
+    @override
+    def parseFileToTxnList(cls, filename: str, tax_year: Optional[int]) -> list[utils.Transaction]:
         with open(filename) as f:
             # First 2 lines are headers.
             f.readline()
             f.readline()
             txns = csv.reader(f, delimiter=',', quotechar='"')
 
-            txn_list = []
-            part = None
-            box = None
-            entry_code = None
+            txn_list: list[utils.Transaction] = []
+            part: Optional[int] = None
+            box: Optional[str] = None
+            entry_code: Optional[int] = None
 
             for row in txns:
                 if row[0] == 'Part' and len(row) == 3:
