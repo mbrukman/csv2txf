@@ -23,10 +23,16 @@ Does not handle:
 * partial lot sales
 """
 
+from __future__ import annotations
+
 import csv
 from datetime import datetime
 from decimal import Decimal
 import re
+from typing import Optional
+
+from broker import Broker
+from decorators import override
 import utils
 
 
@@ -38,63 +44,67 @@ FIRST_LINE = ','.join([
 TRANSACTION_TYPE = 'Trans type'
 
 
-class TDAmeritrade:
+class TDAmeritrade(Broker):
+
     @classmethod
-    def name(cls):
+    @override
+    def name(cls) -> str:
         return "TD Ameritrade"
 
     @classmethod
-    def buyDate(cls, dict):
+    def buyDate(cls, txn: dict[str, str]) -> datetime:
         """Returns date of transaction as datetime object."""
         # Our input date format is MM/DD/YYYY.
-        return datetime.strptime(dict['Open date'], '%m/%d/%Y')
+        return datetime.strptime(txn['Open date'], '%m/%d/%Y')
 
     @classmethod
-    def sellDate(cls, dict):
+    def sellDate(cls, txn: dict[str, str]) -> datetime:
         """Returns date of transaction as datetime object."""
         # Our input date format is MM/DD/YYYY.
-        return datetime.strptime(dict['Close date'], '%m/%d/%Y')
+        return datetime.strptime(txn['Close date'], '%m/%d/%Y')
 
     @classmethod
-    def isShortTerm(cls, dict):
-        return dict['Term'] == 'Short-term'
+    def isShortTerm(cls, txn: dict[str, str]) -> bool:
+        return txn['Term'] == 'Short-term'
 
     @classmethod
-    def symbol(cls, dict):
-        match = re.match('^.*\((.*)\)$', dict['Security'])
+    def symbol(cls, txn: dict[str, str]) -> str:
+        match = re.match(r'^.*\((.*)\)$', txn['Security'])
         if match:
             return match.group(1)
         else:
-            raise Exception('Security symbol not found in: %s' % dict)
+            raise Exception('Security symbol not found in: %s' % txn)
 
     @classmethod
-    def numShares(cls, dict):
-        return Decimal(dict['Qty'])
+    def numShares(cls, txn: dict[str, str]) -> Decimal:
+        return Decimal(txn['Qty'])
 
     @classmethod
-    def costBasis(cls, dict):
+    def costBasis(cls, txn: dict[str, str]) -> Decimal:
         # Proceeds amount may include commas as thousand separators, which
         # Decimal does not handle.
-        return Decimal(dict['Adj cost'].replace(',', ''))
+        return Decimal(txn['Adj cost'].replace(',', ''))
 
     @classmethod
-    def saleProceeds(cls, dict):
+    def saleProceeds(cls, txn: dict[str, str]) -> Decimal:
         # Proceeds amount may include commas as thousand separators, which
         # Decimal does not handle.
-        return Decimal(dict['Adj proceeds'].replace(',', ''))
+        return Decimal(txn['Adj proceeds'].replace(',', ''))
 
     @classmethod
-    def isFileForBroker(cls, filename):
+    @override
+    def isFileForBroker(cls, filename: str) -> bool:
         with open(filename) as f:
             first_line = f.readline()
             return first_line == FIRST_LINE
 
     @classmethod
-    def parseFileToTxnList(cls, filename, tax_year):
+    @override
+    def parseFileToTxnList(cls, filename: str, tax_year: Optional[int]) -> list[utils.Transaction]:
         txns = csv.reader(open(filename), delimiter=',', quotechar='"')
         line_num = 0
-        txn_list = []
-        names = None
+        txn_list: list[utils.Transaction] = []
+        names: list[str] = []
         for row in txns:
             line_num = line_num + 1
             if line_num == 1:
@@ -113,14 +123,14 @@ class TDAmeritrade:
             curr_txn = utils.Transaction()
             curr_txn.desc = '%s shares %s' % (
                 cls.numShares(txn_dict), cls.symbol(txn_dict))
-            curr_txn.buyDate = cls.buyDate(txn_dict)
-            curr_txn.buyDateStr = utils.txfDate(curr_txn.buyDate)
+            buyDate = cls.buyDate(txn_dict)
+            curr_txn.buyDateStr = utils.txfDate(buyDate)
             curr_txn.costBasis = cls.costBasis(txn_dict)
-            curr_txn.sellDate = cls.sellDate(txn_dict)
-            curr_txn.sellDateStr = utils.txfDate(curr_txn.sellDate)
+            sellDate = cls.sellDate(txn_dict)
+            curr_txn.sellDateStr = utils.txfDate(sellDate)
             curr_txn.saleProceeds = cls.saleProceeds(txn_dict)
 
-            assert curr_txn.sellDate >= curr_txn.buyDate
+            assert sellDate >= buyDate, f'Sell date ({sellDate}) must be on or after buy date ({buyDate})'
             if cls.isShortTerm(txn_dict):
                 # TODO(mbrukman): assert here that (sellDate - buyDate) <= 1 year
                 curr_txn.entryCode = 321  # "ST gain/loss - security"
@@ -128,7 +138,7 @@ class TDAmeritrade:
                 # TODO(mbrukman): assert here that (sellDate - buyDate) > 1 year
                 curr_txn.entryCode = 323  # "LT gain/loss - security"
 
-            if tax_year and curr_txn.sellDate.year != tax_year:
+            if tax_year and sellDate.year != tax_year:
                 utils.Warning('ignoring txn: "%s" (line %d) as the sale is not from %d\n' %
                               (curr_txn.desc, line_num, tax_year))
                 continue
