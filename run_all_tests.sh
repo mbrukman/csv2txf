@@ -24,7 +24,6 @@ fi
 
 for test in *_test.* ; do
   test_out="$(mktemp "/tmp/csv2txf.${test}.XXXXXX")"
-  echo -n "Testing ${test} ... "
   if [[ ${test} =~ _test.py ]] && [ -n "${PYTHON:-}" ]; then
     echo -n "Testing ${test} (with ${PYTHON}) ... "
     ${PYTHON} "./${test}" > "${test_out}" 2>&1
