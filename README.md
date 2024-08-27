@@ -2,8 +2,8 @@
 
 [![Build Status][github-ci-badge]][github-ci-url]
 
-[github-ci-badge]: https://github.com/mbrukman/csv2txf/actions/workflows/main.yml/badge.svg
-[github-ci-url]: https://github.com/mbrukman/csv2txf/actions/workflows/main.yml
+[github-ci-badge]: https://github.com/mbrukman/csv2txf/actions/workflows/main.yml/badge.svg?query=branch%3Amain
+[github-ci-url]: https://github.com/mbrukman/csv2txf/actions/workflows/main.yml?query=branch%3Amain
 
 ## Overview
 
