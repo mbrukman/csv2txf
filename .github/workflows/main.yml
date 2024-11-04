@@ -37,7 +37,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ 'ubuntu-24.04', 'ubuntu-22.04', 'macos-14', 'macos-13' ]
-        python: [ '3.8', '3.9', '3.10', '3.11', '3.12' ]
+        python: [ '3.13', '3.12', '3.11', '3.10', '3.9', '3.8' ]
     name: Python ${{ matrix.python }} (${{ matrix.os }})
     steps:
       - name: Checkout repo
@@ -52,14 +52,23 @@ jobs:
       - name: Run tests
         run: make test VERBOSE=1
 
-      - name: Install Python deps for typechecking tests
-        run: python -m pip install -r requirements-test.txt
+      - name: Install Python deps for Mypy typechecking tests
+        run: python -m pip install -r requirements-mypy.txt
 
       - name: Check types with Mypy
         run: make mypy-test
         # Mark this check optional for now, in case it starts out failing.
         # We will make it required once we've fixed any existing issues.
         continue-on-error: true
+
+      - name: Install Python deps for PyType typechecking tests
+        run: python -m pip install -r requirements-pytype.txt
+        # https://github.com/google/pytype/issues/1475
+        #
+        # PyType does not yet support Python 3.12 or later; if this step is
+        # enabled, it fails with an error: "Python versions > 3.11 are not yet
+        # supported."
+        if: ${{ (matrix.python != '3.13') && (matrix.python != '3.12') }}
 
       - name: Check types with PyType
         run: make pytype-test
@@ -68,6 +77,7 @@ jobs:
         continue-on-error: true
         # https://github.com/google/pytype/issues/1475
         #
-        # PyType does not yet support Python 3.12; if this step is enabled, it
-        # fails with an error: "Python versions > 3.11 are not yet supported."
-        if: ${{ matrix.python != '3.12' }}
+        # PyType does not yet support Python 3.12 or later; if this step is
+        # enabled, it fails with an error: "Python versions > 3.11 are not yet
+        # supported."
+        if: ${{ (matrix.python != '3.13') && (matrix.python != '3.12') }}
