@@ -1,3 +1,0 @@
-# Type checking.
-mypy ~= 1.9.0
-pytype ~= 2024.3.19
