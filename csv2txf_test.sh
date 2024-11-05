@@ -24,7 +24,7 @@ fi
 declare -i num_failures=0
 
 # macOS 12+ doesn't provide /usr/bin/python, but provides /usr/bin/python3
-PYTHON=""
+PYTHON="python"
 if ! [[ -f "/usr/bin/python" ]] && [[ -f "/usr/bin/python3" ]]; then
   PYTHON="python3"
 fi
