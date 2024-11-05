@@ -12,22 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import annotations
-
-import sys
-
-
-if (sys.version_info.major, sys.version_info.minor) >= (3, 12):
-    # This was added in Python 3.12:
-    #
-    # * https://docs.python.org/3/library/typing.html#typing.override
-    # * https://peps.python.org/pep-0698/
-    from typing import override
-else:
-    from typing import TypeVar
-
-    _F = TypeVar('_F')
-
-    def override(func: _F) -> _F:
-        """No-op @override for Python versions prior to 3.12."""
-        return func
+# This was added in Python 3.12:
+#
+# * https://docs.python.org/3/library/typing.html#typing.override
+# * https://peps.python.org/pep-0698/
+from typing_extensions import override
