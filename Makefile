@@ -26,6 +26,7 @@ regen:
 
 THIRD_PARTY_PYTHON = third_party/python
 PIP := $(shell which pip || which pip3)
+PYTHON_VERSION ?= $(shell python -c "import sys; print(f'{sys.version_info[0]}.{sys.version_info[1]}')")
 
 install-dev:
 	$(VERB) $(PIP) install -r requirements-dev.txt -t $(THIRD_PARTY_PYTHON)
@@ -36,10 +37,10 @@ autopep8:
 	        | xargs -I {} python $(THIRD_PARTY_PYTHON)/autopep8.py --in-place {}
 
 mypy-test:
-	$(VERB) python -m mypy --ignore-missing-imports `find . -name 'third_party' -prune -o -name '*.py' -print`
+	$(VERB) python -m mypy --python-version=$(PYTHON_VERSION) --ignore-missing-imports `find . -name 'third_party' -prune -o -name '*.py' -print`
 
 pytype-test:
-	$(VERB) python -m pytype -k `find . -name 'third_party' -prune -o -name '*.py' -print`
+	$(VERB) python -m pytype --python-version=$(PYTHON_VERSION) -k `find . -name 'third_party' -prune -o -name '*.py' -print`
 
 clean:
 	$(VERB) rm -rf `find . -name \*\.pyc` $(THIRD_PARTY_PYTHON)/*
