@@ -32,7 +32,7 @@ import re
 from typing import Optional
 
 from broker import Broker
-from decorators import override
+from typing_extensions import override
 import utils
 
 
