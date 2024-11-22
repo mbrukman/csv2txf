@@ -72,9 +72,6 @@ jobs:
 
       - name: Check types with PyType
         run: make pytype-test PYTHON_VERSION=${{ matrix.python }} VERBOSE=1
-        # Mark this check optional for now, in case it starts out failing.
-        # We will make it required once we've fixed any existing issues.
-        continue-on-error: true
         # https://github.com/google/pytype/issues/1475
         #
         # PyType does not yet support Python 3.12 or later; if this step is
