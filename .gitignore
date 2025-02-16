@@ -1,5 +1,7 @@
 # Compiled Python modules
-*.pyc
+__pycache__/
+*.py[cdo]
 
-# Vim temporary files
-*.sw?
+# Temporary editor files
+.*.sw[nop]
+*~

@@ -43,4 +43,6 @@ pytype-test:
 	$(VERB) python -m pytype --python-version=$(PYTHON_VERSION) -k `find . -name 'third_party' -prune -o -name '*.py' -print`
 
 clean:
-	$(VERB) rm -rf `find . -name \*\.pyc` $(THIRD_PARTY_PYTHON)/*
+	$(VERB) rm -rf __pycache__
+	$(VERB) rm -rf `find . -name \*\.pyc`
+	$(VERB) rm -rf $(THIRD_PARTY_PYTHON)/*
