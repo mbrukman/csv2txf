@@ -128,7 +128,11 @@ class Vanguard(Broker):
                 assert cls.symbol(buy) == cls.symbol(sell)
                 assert cls.investmentName(buy) == cls.investmentName(sell)
 
-                buyDate: datetime = curr_txn.buyDate
+                buyDate: Optional[datetime] = curr_txn.buyDate
+                if buyDate is None:
+                    utils.Warning(f'Missing buy date for current transaction: {curr_txn}\n')
+                    continue
+
                 sellDate: datetime = cls.date(sell)
                 curr_txn.sellDateStr = utils.txfDate(sellDate)
                 curr_txn.saleProceeds = cls.netAmount(sell)
