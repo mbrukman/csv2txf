@@ -16,7 +16,6 @@
 
 """Tests for interactive_brokers module."""
 
-from datetime import datetime
 import glob
 import os
 import unittest
