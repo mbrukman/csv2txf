@@ -27,6 +27,9 @@ class Error(Exception):
 
 
 class ValueError(Error):
+
+    msg: str
+
     def __init__(self, msg):
         self.msg = msg
 
@@ -35,6 +38,9 @@ class ValueError(Error):
 
 
 class UnimplementedError(Error):
+
+    msg: str
+
     def __init__(self, msg):
         self.msg = msg
 
