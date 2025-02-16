@@ -16,7 +16,6 @@
 
 """Tests for the vanguard module."""
 
-from datetime import datetime
 import glob
 import os
 import unittest
