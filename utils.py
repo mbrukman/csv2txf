@@ -49,7 +49,7 @@ class UnimplementedError(Error):
 
 
 def Warning(msg: str):
-    sys.stderr.write('warning: %s' % msg)
+    sys.stderr.write('warning: %s\n' % msg)
 
 
 class Transaction:

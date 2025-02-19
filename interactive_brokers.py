@@ -98,17 +98,16 @@ class InteractiveBrokers(Broker):
                     elif row[1] == 'II':
                         part = 2
                     else:
-                        utils.Warning('unknown part line: "%s"\n' % row)
+                        utils.Warning('unknown part line: "%s"' % row)
                 elif row[0] == 'Box' and len(row) == 3:
                     if row[1] == 'A' or row[1] == 'B' or row[1] == 'C':
                         box = row[1]
                         entry_code = cls.DetermineEntryCode(part, box)
                     else:
-                        utils.Warning('unknown box line: "%s"\n' % row)
+                        utils.Warning('unknown box line: "%s"' % row)
                 elif row[0] == 'Data' and len(row) == 9:
                     if not entry_code:
-                        utils.Warning(
-                            'ignoring data: "%s" as the code is not defined\n')
+                        utils.Warning('ignoring data: "%s" as the code is not defined')
                         continue
                     txn = utils.Transaction()
                     txn.desc = row[1]
@@ -121,12 +120,12 @@ class InteractiveBrokers(Broker):
                         txn.adjustment = cls.ParseDollarValue(row[7])
                     txn.entryCode = entry_code
                     if tax_year and year and year != tax_year:
-                        utils.Warning('ignoring txn: "%s" as the sale is not from %d\n' %
+                        utils.Warning('ignoring txn: "%s" as the sale is not from %d' %
                                       (txn.desc, tax_year))
                     else:
                         txn_list.append(txn)
                     txn = None
                 elif (row[0] != 'Header' and row[0] != 'Footer') or len(row) != 9:
-                    utils.Warning('unknown line: "%s"\n' % row)
+                    utils.Warning('unknown line: "%s"' % row)
 
             return txn_list
