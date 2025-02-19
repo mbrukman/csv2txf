@@ -44,13 +44,16 @@ def ConvertTxnListToTxf(txn_list: list[utils.Transaction], tax_year: int, date: 
     lines.append('^')
     for txn in txn_list:
         lines.append('TD')
+        assert txn.entryCode is not None
         lines.append('N%d' % txn.entryCode)
         lines.append('C1')
         lines.append('L1')
         lines.append('P%s' % txn.desc)
         lines.append('D%s' % txn.buyDateStr)
         lines.append('D%s' % txn.sellDateStr)
+        assert txn.costBasis is not None
         lines.append('$%.2f' % txn.costBasis)
+        assert txn.saleProceeds is not None
         lines.append('$%.2f' % txn.saleProceeds)
         if txn.adjustment:
             lines.append('$%.2f' % txn.adjustment)
