@@ -130,7 +130,7 @@ class Vanguard(Broker):
 
                 buyDate: Optional[datetime] = curr_txn.buyDate
                 if buyDate is None:
-                    utils.Warning(f'Missing buy date for current transaction: {curr_txn}\n')
+                    utils.Warning(f'Missing buy date for current transaction: {curr_txn}')
                     continue
 
                 sellDate: datetime = cls.date(sell)
@@ -144,7 +144,7 @@ class Vanguard(Broker):
 
                 assert sellDate >= buyDate, f'Sell date ({sellDate}) must be on or after buy date ({buyDate})'
                 if tax_year and sellDate.year != tax_year:
-                    utils.Warning('ignoring txn: "%s" as the sale is not from %d\n' %
+                    utils.Warning('ignoring txn: "%s" as the sale is not from %d' %
                                   (curr_txn.desc, tax_year))
                     continue
 

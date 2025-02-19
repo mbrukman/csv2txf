@@ -139,7 +139,7 @@ class TDAmeritrade(Broker):
                 curr_txn.entryCode = 323  # "LT gain/loss - security"
 
             if tax_year and sellDate.year != tax_year:
-                utils.Warning('ignoring txn: "%s" (line %d) as the sale is not from %d\n' %
+                utils.Warning('ignoring txn: "%s" (line %d) as the sale is not from %d' %
                               (curr_txn.desc, line_num, tax_year))
                 continue
 

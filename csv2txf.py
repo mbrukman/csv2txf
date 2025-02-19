@@ -104,7 +104,7 @@ def main(argv):
         year = int(options.year)
     else:
         year = datetime.today().year - 1
-        utils.Warning(f'Year not specified, defaulting to {year} (last year)\n')
+        utils.Warning(f'Year not specified, defaulting to {year} (last year)')
 
     output = None
     if options.out_format == 'summary':
