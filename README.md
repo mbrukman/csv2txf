@@ -1,9 +1,12 @@
 # csv2txf
 
-[![Build Status][github-ci-badge]][github-ci-url]
+[![Tests status][tests-badge]][tests-url]
+[![Typecheck status][typecheck-badge]][typecheck-url]
 
-[github-ci-badge]: https://github.com/mbrukman/csv2txf/actions/workflows/main.yml/badge.svg?query=branch%3Amain
-[github-ci-url]: https://github.com/mbrukman/csv2txf/actions/workflows/main.yml?query=branch%3Amain
+[tests-badge]: https://github.com/mbrukman/csv2txf/actions/workflows/tests.yaml/badge.svg?query=branch%3Amain
+[tests-url]: https://github.com/mbrukman/csv2txf/actions/workflows/tests.yaml?query=branch%3Amain
+[typecheck-badge]: https://github.com/mbrukman/csv2txf/actions/workflows/typecheck.yaml/badge.svg?query=branch%3Amain
+[typecheck-url]: https://github.com/mbrukman/csv2txf/actions/workflows/typecheck.yaml?query=branch%3Amain
 
 ## Overview
 
