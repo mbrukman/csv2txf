@@ -16,9 +16,16 @@ name: "Run tests"
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+
+  # Enable manually triggering this workflow
+  workflow_dispatch:
+
   schedule:
       # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
       #
