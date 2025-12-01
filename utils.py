@@ -80,7 +80,10 @@ class Transaction:
 
 def txfDate(date: datetime) -> str:
     """Returns a date string in the TXF format, which is MM/DD/YYYY."""
-    return date.strftime('%m/%d/%Y')
+    if isinstance(date, basestring):
+        return date
+    else:
+        return date.strftime('%m/%d/%Y')
 
 
 def isLongTerm(buy_date: datetime, sell_date: datetime) -> bool:
