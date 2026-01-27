@@ -117,7 +117,7 @@ class Vanguard(Broker):
                 curr_txn.desc = '%d shares %s' % (
                     cls.numShares(buy), cls.symbol(buy))
                 curr_txn.buyDate = cls.date(txn_dict)
-                curr_txn.buyDateStr = utils.txfDate(curr_txn.buyDate)
+                curr_txn.buyDateStr = utils.txf_date(curr_txn.buyDate)
                 curr_txn.costBasis = cls.netAmount(txn_dict)
             elif cls.isSell(txn_dict):
                 sell = txn_dict
@@ -134,7 +134,7 @@ class Vanguard(Broker):
                     continue
 
                 sellDate: datetime = cls.date(sell)
-                curr_txn.sellDateStr = utils.txfDate(sellDate)
+                curr_txn.sellDateStr = utils.txf_date(sellDate)
                 curr_txn.saleProceeds = cls.netAmount(sell)
 
                 if utils.isLongTerm(buyDate, sellDate):
