@@ -124,10 +124,10 @@ class TDAmeritrade(Broker):
             curr_txn.desc = '%s shares %s' % (
                 cls.numShares(txn_dict), cls.symbol(txn_dict))
             buyDate = cls.buyDate(txn_dict)
-            curr_txn.buyDateStr = utils.txfDate(buyDate)
+            curr_txn.buyDateStr = utils.txf_date(buyDate)
             curr_txn.costBasis = cls.costBasis(txn_dict)
             sellDate = cls.sellDate(txn_dict)
-            curr_txn.sellDateStr = utils.txfDate(sellDate)
+            curr_txn.sellDateStr = utils.txf_date(sellDate)
             curr_txn.saleProceeds = cls.saleProceeds(txn_dict)
 
             assert sellDate >= buyDate, f'Sell date ({sellDate}) must be on or after buy date ({buyDate})'

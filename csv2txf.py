@@ -39,7 +39,7 @@ def ConvertTxnListToTxf(txn_list: list[utils.Transaction], tax_year: int, date: 
     lines.append('V042')  # Version
     lines.append('Acsv2txf')  # Program name/version
     if date is None:
-        date = utils.txfDate(datetime.today())
+        date = utils.txf_date(datetime.today())
     lines.append('D%s' % date)  # Export date
     lines.append('^')
     for txn in txn_list:

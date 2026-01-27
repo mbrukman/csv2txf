@@ -78,7 +78,7 @@ class Transaction:
         return ','.join(formatted_data)
 
 
-def txfDate(date: datetime) -> str:
+def txf_date(date: datetime) -> str:
     """Returns a date string in the TXF format, which is MM/DD/YYYY."""
     return date.strftime('%m/%d/%Y')
 
