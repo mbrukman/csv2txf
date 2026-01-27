@@ -48,7 +48,7 @@ class UnimplementedError(Error):
         return self.msg
 
 
-def Warning(msg: str):
+def warn(msg: str) -> None:
     sys.stderr.write('warning: %s\n' % msg)
 
 
