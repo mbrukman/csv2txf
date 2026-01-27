@@ -83,7 +83,7 @@ def txf_date(date: datetime) -> str:
     return date.strftime('%m/%d/%Y')
 
 
-def isLongTerm(buy_date: datetime, sell_date: datetime) -> bool:
+def is_long_term(buy_date: datetime, sell_date: datetime) -> bool:
     # To handle leap years, cannot use a standard number of days, i.e.:
     #   sell_date - buy_date > timedelta(days=365)
     #   - doesn't work for leap years

@@ -137,7 +137,7 @@ class Vanguard(Broker):
                 curr_txn.sellDateStr = utils.txf_date(sellDate)
                 curr_txn.saleProceeds = cls.netAmount(sell)
 
-                if utils.isLongTerm(buyDate, sellDate):
+                if utils.is_long_term(buyDate, sellDate):
                     curr_txn.entryCode = 323  # "LT gain/loss - security"
                 else:
                     curr_txn.entryCode = 321  # "ST gain/loss - security"
