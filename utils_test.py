@@ -25,18 +25,18 @@ class UtilsTest(unittest.TestCase):
     def testIsLongTermNonLeapYear(self):
         buy = datetime(2010, 1, 4)
         sell = datetime(2011, 1, 5)
-        self.assertTrue(utils.isLongTerm(buy, sell))
+        self.assertTrue(utils.is_long_term(buy, sell))
 
     def testIsLongTermLeapYear(self):
         buy = datetime(2008, 1, 4)
         sell = datetime(2009, 1, 4)
-        self.assertFalse(utils.isLongTerm(buy, sell))
+        self.assertFalse(utils.is_long_term(buy, sell))
 
     def testIsLongTermCorrectOrder(self):
         buy = datetime(2005, 1, 1)
         sell = datetime(2000, 1, 4)
         # TODO: verify error message.
-        self.assertRaises(utils.ValueError, utils.isLongTerm, buy, sell)
+        self.assertRaises(utils.ValueError, utils.is_long_term, buy, sell)
 
 
 if __name__ == '__main__':
