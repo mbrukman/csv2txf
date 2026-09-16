@@ -34,6 +34,7 @@ from typing import Optional, Type
 
 from broker import Broker
 from interactive_brokers import InteractiveBrokers
+from merrill import Merrill
 from tdameritrade import TDAmeritrade
 from vanguard import Vanguard
 
@@ -41,6 +42,7 @@ from vanguard import Vanguard
 BROKERS: dict[str, Type[Broker]] = {
     'amtd': TDAmeritrade,
     'ib': InteractiveBrokers,
+    'merrill': Merrill,
     'tdameritrade': TDAmeritrade,
     'vanguard': Vanguard,
 }

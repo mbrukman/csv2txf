@@ -21,7 +21,7 @@ test:
 	$(VERB) ./run_all_tests.sh
 
 regen:
-	$(VERB) ./update_testdata.py
+	$(VERB) python ./update_testdata.py
 	$(VERB) ./csv2txf_test.sh regen
 
 THIRD_PARTY_PYTHON = third_party/python

@@ -99,6 +99,21 @@ test_csv2txf \
     --year 2011 \
     --outfmt summary
 
+test_csv2txf \
+    testdata/merrill.out \
+    --broker merrill \
+    --file testdata/merrill.csv \
+    --year 2025 \
+    --date "04/15/2026" \
+    --outfmt txf
+
+test_csv2txf \
+    testdata/merrill.summary.out \
+    --broker merrill \
+    --file testdata/merrill.csv \
+    --year 2025 \
+    --outfmt summary
+
 if [ ${regen} -eq 0 ]; then
   if [ ${num_failures} -eq 0 ]; then
     echo "PASSED"
